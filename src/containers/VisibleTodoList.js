@@ -1,71 +1,22 @@
 // import React, {Component} from 'react';
 import TodoList from '../components//TodoList';
 import {connect} from 'react-redux';
+import { withRouter } from 'react-router';
 import {toggleTodo} from '../actions';
-const getVisibleTodos = (todos, filter) => {
-  switch(filter) {
-    case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed);
-    case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed);
-    default:
-      return todos;
-  }
-}
+import {getVisibleTodos} from '../reducers';
 
-const mapStateToProps = state => {
-  return {
-    todos:getVisibleTodos(
-      state.todos,
-      state.visibilityFilter
-    )
-  };
-};
+// state为context中store的数据， props为props的数据
+const mapStateToProps = (state, props) => ({
+  todos: getVisibleTodos(
+    state,
+    props.params.filter || 'all'
+  )
+})
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onTodoClick: id => dispatch(toggleTodo(id))
-  };
-};
+// const mapDispatchToProps = dispatch => ({
+//   onTodoClick: id => dispatch(toggleTodo(id))
+// })
 
-const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
-/*class VisibleTodoList extends Component {
-
-  componentDidMount() {
-    const {store} = this.context;
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  componentWillUnmount() {
-  this.unsubscribe();
-  }
-
-  render() {
-    const {store} = this.context;
-    const state = store.getState();
-
-    return (
-      <TodoList
-        todos={
-          getVisibleTodos(
-            state.todos,
-            state.visibilityFilter
-          )
-        }
-        onTodoClick={id =>
-          store.dispatch({
-            type: 'TOGGLE_TODO',
-            id
-          })
-        }
-      />
-    );
-  }
-}
-
-VisibleTodoList.contextTypes = {
-  store: React.PropTypes.object
-};*/
+// const VisibleTodoList = withRouter(connect(mapStateToProps, mapDispatchToProps)(TodoList));
+const VisibleTodoList = withRouter(connect(mapStateToProps, {onTodoClick:toggleTodo})(TodoList));
 export default VisibleTodoList;
