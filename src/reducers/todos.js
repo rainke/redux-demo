@@ -4,7 +4,6 @@ import todo from './todo';
 const getAllTodos = (state) =>
   state.allIds.map(id => state.byId[id]);
 
-
 const byId = (state={}, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -13,6 +12,10 @@ const byId = (state={}, action) => {
         ...state,
         [action.id]:todo(state[action.id], action)
       };
+    case 'RECEIVE_TODOS':
+      var nextState = {...state};
+      action.response.forEach( item => nextState[item.id] = item);
+      return nextState;
     default:
       return state;
   }
@@ -22,6 +25,8 @@ const allIds =(state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
       return [...state, action.id];
+    case 'RECEIVE_TODOS':
+      return [...state, ...action.response.map(item => item.id)];
     default:
       return state;
   }
