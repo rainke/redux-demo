@@ -11,7 +11,10 @@ const creatList = filter => {
         return state;
     }
   }
-  let isFetching = (state = false, action) =>{
+  let isFetching = (state = false, action) => {
+    if (action.filter !== filter) {
+      return state;
+    }
     switch(action.type) {
       case 'REQUEST_TODOS':
         return true;
