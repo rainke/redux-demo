@@ -19,3 +19,6 @@ export const getVisibleTodos = (state, filter) => {
 
 export const getIsFetching = (state, filter) =>
   state.idsByFilter[filter].isFetching;
+
+export const getErrorMessage = (state, filter) =>
+  state.idsByFilter[filter].errorMessage;
